@@ -2,9 +2,10 @@ const Storages = require("../models/Storages");
 const Bookings = require("../models/Bookings");
 const Clusters = require("../models/Clusters");
 const Volumes = require("../models/Volumes");
+const WebSocket = require('ws');
 const getDistance = require("../services/gpsService");
 const Users = require("../models/Users");
-const {calculateHourDifference} = require("../services/dateService");
+const calculateHourDifference = require("../services/dateService");
 
 class rentController {
     async getAvailableClusters(request, response){
@@ -89,7 +90,7 @@ class rentController {
             }
             const time = calculateHourDifference(from,to);
             if(user.balance<storage.price*time){
-                return response.status(404).json({ message: "Error: Not enough money on balance" });
+                return response.status(404).json({ message: "Error: Not enough money on balance. You need: "+(storage.price*time-user.balance) });
             }
             user.balance = user.balance - storage.price*time;
             await user.save();
@@ -139,7 +140,7 @@ class rentController {
             }
             const user = await Users.findOne({username:request.user.username});
             const booking = await Bookings.findById(bookingId)
-            if (!booking || booking.userId!==user._id) {
+            if (!booking || !booking.userId.equals(user._id)) {
                 return response.status(404).json({ message: "Booking not found" });
             }
             const now = new Date();
@@ -155,9 +156,9 @@ class rentController {
 
             await storage.save();
 
-            const ws = new WebSocket('ваш_адрес_веб-сокету');
+            const ws = new WebSocket('ws://localhost:5000');
             ws.on('open', function open() {
-                ws.send(JSON.stringify({ storageId: storageId }));
+                ws.send(JSON.stringify({ storageId: storage._id }));
                 ws.close();
             });
 

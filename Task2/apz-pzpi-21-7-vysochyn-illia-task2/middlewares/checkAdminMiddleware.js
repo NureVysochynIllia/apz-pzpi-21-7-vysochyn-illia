@@ -11,9 +11,9 @@ const checkAdminMiddleware = async (req, res, next) => {
         return res.status(401).json({message: 'Unauthorized. Token missing.'});
     }
     try {
-        const decodedToken = jwt.verify(token, secret);
-        const user = await Users.findOne({username: decodedToken.username})
-        if (decodedToken.role === 'admin' && user) {
+        req.user = jwt.verify(token, secret);
+        const user = await Users.findOne({username: req.user.username})
+        if (req.user.role === 'admin' && user) {
             next();
         } else {
             res.status(403).json({message: 'Access denied. Admin role required.'});

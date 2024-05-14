@@ -13,7 +13,7 @@ const checkAuthorizedMiddleware = async (req, res, next) => {
             return res.status(403).json({message: 'User is not authorized'});
         }
         req.user = jwt.verify(token, secret);
-        const user = await Users.findOne({username: decodedToken.username})
+        const user = await Users.findOne({username: req.user.username})
         if(user) {
             next();
         }

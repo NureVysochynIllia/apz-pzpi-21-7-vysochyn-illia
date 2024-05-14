@@ -1,5 +1,6 @@
 const Clusters = require('../models/Clusters');
 const Storages = require('../models/Storages');
+const Volumes = require("../models/Volumes");
 class clusterController {
     async addCluster(request, response){
         try {
@@ -52,6 +53,33 @@ class clusterController {
             return response.status(200).json(cluster);
         } catch (error) {
             return response.status(500).json({ message: "Failed to delete cluster.", error: error.message });
+        }
+    }
+    async getCluster(request, response){
+        try {
+            const {id} = request.params;
+            const cluster = await Clusters.findById(id);
+            const storages = await Storages.find({clusterId: id});
+            const storagesResp = [];
+            for (let i = 0; i < storages.length; i++) {
+                const volumeInfo = await Volumes.findOne({ storageId: storages[i]._id });
+                storagesResp.push({
+                    _id: storages[i]._id,
+                    number:storages[i].number,
+                    isOpened: storages[i].isOpened,
+                    price:storages[i].price,
+                    clusterId:storages[i].clusterId,
+                    volume:{
+                        height:volumeInfo.height,
+                        width:volumeInfo.width,
+                        length:volumeInfo.length,
+                        unit:volumeInfo.unit
+                    }
+                });
+            }
+            return response.status(200).json({cluster,storages:storagesResp});
+        } catch (error) {
+            return response.status(500).json({ message: "Failed to get cluster.", error: error.message });
         }
     }
 }
