@@ -12,7 +12,7 @@ class clusterController {
             await newCluster.save();
             return response.status(201).json({ message: 'Cluster crated successfully.' });
         } catch (error){
-            return response.status(500).json({ message: "Registration failed", error: error.message });
+            return response.status(500).json({ message: "Cluster creation failed", error: error.message });
         }
     }
     async editCluster(request, response){
@@ -37,7 +37,7 @@ class clusterController {
     async deleteCluster(request, response){
         try {
             const {id} = request.params;
-            await Clusters.deleteOne(id);
+            await Clusters.deleteOne({_id:id});
             const storages = await Storages.find({clusterId: id});
             for(let i = 0; i<storages.length;i++){
                 await Volumes.deleteMany({ storageId: storages[i]._id });
@@ -53,7 +53,7 @@ class clusterController {
             const cluster = await Clusters.find();
             return response.status(200).json(cluster);
         } catch (error) {
-            return response.status(500).json({ message: "Failed to delete cluster.", error: error.message });
+            return response.status(500).json({ message: "Failed to get clusters.", error: error.message });
         }
     }
     async getCluster(request, response){

@@ -1,6 +1,5 @@
 const Storages = require('../models/Storages');
 const Volumes = require('../models/Volumes');
-const Clusters = require("../models/Clusters");
 const {getOtherMeasurement} = require("../services/sizeService");
 
 class storageController {
@@ -8,7 +7,7 @@ class storageController {
         try {
             const { number, price, clusterId, height, width, length, unit } = request.body;
             if (!number ||  !price || !clusterId || !height || !width || !length || !unit) {
-                return response.status(400).json({ message: "Error: Some fields are empty" });
+                return response.status(400).json({ message: "Some fields are empty" });
             }
             const newStorage = new Storages({number, isOpened:true, price, clusterId});
             await newStorage.save();
@@ -18,7 +17,7 @@ class storageController {
 
             return response.status(201).json({message: 'Storage created successfully.'});
         } catch (error) {
-            return response.status(500).json({message: "Failed to create storage", error: error.message});
+            return response.status(500).json({message: "Failed to create storage.", error: error.message});
         }
     }
 

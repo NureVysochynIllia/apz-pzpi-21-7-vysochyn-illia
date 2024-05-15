@@ -9,7 +9,7 @@ class staffController {
             const {price, clusterId, storageId} = request.body;
             console.log(!price, !clusterId);
             if (!price || !clusterId) {
-                return response.status(400).json({message: "Error: Some fields are empty"});
+                return response.status(400).json({message: "Some fields are empty."});
             }
             if (!storageId) {
                 await Storages.updateMany({clusterId}, {price});
@@ -18,24 +18,23 @@ class staffController {
             }
             return response.status(201).json({message: 'Price changed successfully.'});
         } catch (error) {
-            return response.status(500).json({message: "Failed to change price", error: error.message});
+            return response.status(500).json({message: "Failed to change price.", error: error.message});
         }
     }
 
     async getStatistics(request, response) {
         try {
             const now = new Date();
-            const thirtyDaysAgo = new Date(now);
-            thirtyDaysAgo.setDate(now.getDate() - 30);
+            const threeMonthAgo = new Date(now);
+            threeMonthAgo.setMonth(now.getMonth() - 3);
             const bookings = await Bookings.find({
-                'rentalTime.from': {$gte: thirtyDaysAgo},
-                'rentalTime.to': {$lte: now}
+                'rentalTime.from': {$gte: threeMonthAgo},
             });
             const statistics = {};
             for (const booking of bookings) {
                 const storageId = booking.storageId.toString();
                 const hours = calculateHourDifference(booking.rentalTime.from, booking.rentalTime.to);
-                const earnings = booking.price * hours;
+                const earnings = booking.price;
 
                 if (!statistics[storageId]) {
                     statistics[storageId] = {rentedHours: 0, earnings: 0};
@@ -44,21 +43,33 @@ class staffController {
                 statistics[storageId].rentedHours += hours;
                 statistics[storageId].earnings += earnings;
             }
-            const clusters = await Clusters.find().populate('storages');
-
-            for (const cluster of clusters) {
-                cluster.storages.forEach(storage => {
-                    const storageId = storage._id.toString();
-                    if (statistics[storageId]) {
-                        storage.statistics = statistics[storageId];
-                    } else {
-                        storage.statistics = { rentedHours: 0, earnings: 0 };
-                    }
+            const clusters = await Clusters.find();
+            let clusterResp = []
+            for (let i = 0; i < clusters.length; i++) {
+                const storages = await Storages.find({clusterId: clusters[i]._id})
+                clusterResp.push({
+                    _id: clusters[i]._id,
+                    name: clusters[i].name,
+                    city: clusters[i].city,
+                    type: clusters[i].type,
+                    storages: storages.map(storage=>{
+                        const storageId = storage._id.toString();
+                        if (statistics[storageId]) {
+                            storage.statistics = statistics[storageId];
+                        } else {
+                            storage.statistics = { rentedHours: 0, earnings: 0 };
+                        }
+                        return {
+                            statistics:storage.statistics,
+                            number: storage.number,
+                        }
+                    })
                 });
             }
-            return response.status(200).json({clusters});
+            return response.status(200).json({clusters:clusterResp});
         } catch (error) {
-            return response.status(500).json({message: "Failed to get statistics", error: error.message});
+            console.log(error)
+            return response.status(500).json({message: "Failed to get statistics.", error: error.message});
         }
     }
 }

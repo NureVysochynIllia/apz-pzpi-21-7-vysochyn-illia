@@ -31,7 +31,7 @@ class rentController {
             const freeStorages = await Storages.find(storageQuery);
             const freeStorageIds = freeStorages.map(storage => storage._id);
             let availableStorageIds;
-            if(!to || !from) {
+            if(to && from) {
                 const bookingQuery = {
                     storageId: {$in: freeStorageIds},
                     $or: [
@@ -47,15 +47,16 @@ class rentController {
             else{
                 availableStorageIds = freeStorageIds;
             }
-
-            let clusterQuery = { storages: { $in: availableStorageIds } };
+            const availableStorages = await Storages.find({_id: { $in: availableStorageIds } })
+            let clusterQuery = { _id: { $in: availableStorages.map(storage => storage.clusterId) } };
             if (city) clusterQuery.city = city;
             if (type) clusterQuery.type = type;
             if (name) clusterQuery.name = name;
-
+            console.log(clusterQuery)
             const availableClusters = await Clusters.find(clusterQuery);
-            return response.status(200).json({ availableClusters});
+            return response.status(200).json({availableClusters});
         } catch (error) {
+            console.log(error)
             return response.status(500).json({ message: "Failed to fetch available clusters.", error: error.message });
         }
     }
@@ -63,7 +64,7 @@ class rentController {
         try {
             const { latitude, longitude } = request.query;
             if (!latitude || !longitude) {
-                return response.status(400).json({ message: "Error: Latitude or longitude is missing." });
+                return response.status(400).json({ message: "Latitude or longitude is missing." });
             }
             const clusters = await Clusters.find();
             clusters.sort((a, b) => {
@@ -74,23 +75,23 @@ class rentController {
             const nearestCluster = clusters[0];
             return response.status(200).json({ nearestCluster });
         } catch (error) {
-            return response.status(500).json({message: "Failed to find nearest cluster", error: error.message});
+            return response.status(500).json({message: "Failed to find nearest cluster.", error: error.message});
         }
     }
     async rentStorage(request, response) {
         try {
             const { storageId, from, to } = request.body;
             if (!storageId || !from || !to) {
-                return response.status(400).json({ message: "Error: Some fields are empty" });
+                return response.status(400).json({ message: "Some fields are empty." });
             }
             const user = await Users.findOne({username:request.user.username});
             const storage = await Storages.findById(storageId);
             if(!storage){
-                return response.status(404).json({ message: "Error: Storage not found" });
+                return response.status(404).json({ message: "Storage not found." });
             }
             const time = calculateHourDifference(from,to);
             if(user.balance<storage.price*time){
-                return response.status(404).json({ message: "Error: Not enough money on balance. You need: "+(storage.price*time-user.balance) });
+                return response.status(404).json({ message: "Not enough money on balance. You need: "+(storage.price*time-user.balance) });
             }
             user.balance = user.balance - storage.price*time;
             await user.save();
@@ -104,7 +105,7 @@ class rentController {
 
             return response.status(201).json({ message: 'Storage rented successfully.' });
         } catch (error) {
-            return response.status(500).json({message: "Failed to X", error: error.message});
+            return response.status(500).json({message: "Failed to rent storage.", error: error.message});
         }
     }
     async getActiveBookings(request, response) {
@@ -118,7 +119,7 @@ class rentController {
             }).populate('storageId')
             return response.status(201).json({bookings});
         } catch (error) {
-            return response.status(500).json({message: "Failed to find bookings", error: error.message});
+            return response.status(500).json({message: "Failed to find active bookings.", error: error.message});
         }
     }
     async getAllBookings(request, response) {
@@ -129,23 +130,23 @@ class rentController {
             })
             return response.status(201).json({bookings});
         } catch (error) {
-            return response.status(500).json({message: "Failed to find bookings", error: error.message});
+            return response.status(500).json({message: "Failed to find bookings.", error: error.message});
         }
     }
     async openStorage(request, response) {
         try {
             const { bookingId } = request.body;
             if (!bookingId) {
-                return response.status(400).json({ message: "Error: Booking ID is required" });
+                return response.status(400).json({ message: "Error: Booking ID is required." });
             }
             const user = await Users.findOne({username:request.user.username});
             const booking = await Bookings.findById(bookingId)
             if (!booking || !booking.userId.equals(user._id)) {
-                return response.status(404).json({ message: "Booking not found" });
+                return response.status(404).json({ message: "Booking not found." });
             }
             const now = new Date();
             if (now < new Date(booking.rentalTime.from) || now > new Date(booking.rentalTime.to)) {
-                return response.status(400).json({ message: "Error: Booking has not started yet or has already ended" });
+                return response.status(400).json({ message: "Booking has not started yet or has already ended." });
             }
             const storage = await Storages.findById(booking.storageId);
             if (!storage) {

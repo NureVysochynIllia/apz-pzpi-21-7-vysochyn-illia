@@ -7,13 +7,22 @@ const Storages = require("../models/Storages");
 const Volumes = require("../models/Volumes");
 const rootFolderPath = path.join(__dirname, '../backups/');
 class adminController {
+    async getUsers(request, response) {
+        try {
+            const users = await Users.find();
+            const usersResp = users.map(user=>{return {username:user.username, role:user.role, email:user.email, _id:user._id}});
+            return response.status(201).json({users: usersResp});
+        } catch (error) {
+            return response.status(500).json({message: "Failed to get users", error: error.message});
+        }
+    }
     async changeRole(request, response) {
         try {
             const {userId, role} = request.body;
             if (!userId || !role || (role!=='admin' && role!=='staff' && role!=='user')) {
                 return response.status(400).json({message: "Error: Some fields are empty"});
             }
-            Users.findOneAndUpdate(userId,role);
+            await Users.findByIdAndUpdate(userId,{role:role});
             return response.status(201).json({message: 'Role changed successfully.'});
         } catch (error) {
             return response.status(500).json({message: "Failed to change role", error: error.message});
