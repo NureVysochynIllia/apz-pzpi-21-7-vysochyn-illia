@@ -7,6 +7,7 @@ class staffController {
     async changePrice(request, response) {
         try {
             const {price, clusterId, storageId} = request.body;
+            console.log(!price, !clusterId);
             if (!price || !clusterId) {
                 return response.status(400).json({message: "Error: Some fields are empty"});
             }

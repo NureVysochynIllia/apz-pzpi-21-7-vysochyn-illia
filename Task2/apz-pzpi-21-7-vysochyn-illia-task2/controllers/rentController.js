@@ -53,7 +53,7 @@ class rentController {
             if (type) clusterQuery.type = type;
             if (name) clusterQuery.name = name;
 
-            const availableClusters = await Clusters.find(clusterQuery).populate('storage');
+            const availableClusters = await Clusters.find(clusterQuery);
             return response.status(200).json({ availableClusters});
         } catch (error) {
             return response.status(500).json({ message: "Failed to fetch available clusters.", error: error.message });

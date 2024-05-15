@@ -37,11 +37,12 @@ class clusterController {
     async deleteCluster(request, response){
         try {
             const {id} = request.params;
-            const cluster = await Clusters.findById(id);
-            if (!cluster) {
-                return response.status(404).json({ message: "Cluster not found." });
+            await Clusters.deleteOne(id);
+            const storages = await Storages.find({clusterId: id});
+            for(let i = 0; i<storages.length;i++){
+                await Volumes.deleteMany({ storageId: storages[i]._id });
             }
-            await cluster.remove();
+            await Storages.deleteMany({ clusterId: id});
             return response.status(200).json({ message: "Cluster deleted successfully." });
         } catch (error) {
             return response.status(500).json({ message: "Failed to delete cluster.", error: error.message });
@@ -62,19 +63,19 @@ class clusterController {
             const storages = await Storages.find({clusterId: id});
             const storagesResp = [];
             for (let i = 0; i < storages.length; i++) {
-                const volumeInfo = await Volumes.findOne({ storageId: storages[i]._id });
+                const volumeInfo = await Volumes.find({ storageId: storages[i]._id });
                 storagesResp.push({
                     _id: storages[i]._id,
                     number:storages[i].number,
                     isOpened: storages[i].isOpened,
                     price:storages[i].price,
                     clusterId:storages[i].clusterId,
-                    volume:{
+                    volumes:volumeInfo.map(volumeInfo=>{return {
                         height:volumeInfo.height,
                         width:volumeInfo.width,
                         length:volumeInfo.length,
                         unit:volumeInfo.unit
-                    }
+                    }}),
                 });
             }
             return response.status(200).json({cluster,storages:storagesResp});
