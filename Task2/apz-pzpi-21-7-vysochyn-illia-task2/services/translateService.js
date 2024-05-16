@@ -1,5 +1,7 @@
+const config = require("../config");
+
 async function translate(text, target){
-    const apiKey = 'e6dfe69c-a535-4174-87f1-f4e2fd0d158b:fx';
+    const apiKey = config.apiKey;
     let returnData;
     await fetch('https://api-free.deepl.com/v2/translate', {
         method: 'POST',
