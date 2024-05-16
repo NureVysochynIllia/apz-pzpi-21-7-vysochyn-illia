@@ -1,6 +1,7 @@
 const Clusters = require('../models/Clusters');
 const Storages = require('../models/Storages');
 const Volumes = require("../models/Volumes");
+const {translateCluster} = require("../services/translateService");
 class clusterController {
     async addCluster(request, response){
         try {
@@ -50,8 +51,11 @@ class clusterController {
     }
     async getClusters(request, response){
         try {
+            const language = request.headers.lang;
             const cluster = await Clusters.find();
-            return response.status(200).json(cluster);
+            const clusterResp = await Promise.all(cluster.map(cluster=> translateCluster(cluster, language)))
+            console.log(clusterResp);
+            return response.status(200).json({clusters:clusterResp});
         } catch (error) {
             return response.status(500).json({ message: "Failed to get clusters.", error: error.message });
         }
@@ -59,7 +63,8 @@ class clusterController {
     async getCluster(request, response){
         try {
             const {id} = request.params;
-            const cluster = await Clusters.findById(id);
+            const language = request.headers.lang;
+            let cluster = await Clusters.findById(id);
             const storages = await Storages.find({clusterId: id});
             const storagesResp = [];
             for (let i = 0; i < storages.length; i++) {
@@ -78,6 +83,7 @@ class clusterController {
                     }}),
                 });
             }
+            cluster = await translateCluster(cluster, language)
             return response.status(200).json({cluster,storages:storagesResp});
         } catch (error) {
             return response.status(500).json({ message: "Failed to get cluster.", error: error.message });

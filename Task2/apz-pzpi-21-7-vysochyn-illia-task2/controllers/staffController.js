@@ -2,6 +2,7 @@ const Storages = require("../models/Storages");
 const Bookings = require("../models/Bookings");
 const calculateHourDifference = require("../services/dateService");
 const Clusters = require("../models/Clusters");
+const {translateCluster} = require("../services/translateService");
 
 class staffController {
     async changePrice(request, response) {
@@ -24,6 +25,7 @@ class staffController {
 
     async getStatistics(request, response) {
         try {
+            const language = request.headers.lang;
             const now = new Date();
             const threeMonthAgo = new Date(now);
             threeMonthAgo.setMonth(now.getMonth() - 3);
@@ -43,7 +45,8 @@ class staffController {
                 statistics[storageId].rentedHours += hours;
                 statistics[storageId].earnings += earnings;
             }
-            const clusters = await Clusters.find();
+            let clusters = await Clusters.find();
+            clusters = await Promise.all(clusters.map(cluster=>translateCluster(cluster,language)));
             let clusterResp = []
             for (let i = 0; i < clusters.length; i++) {
                 const storages = await Storages.find({clusterId: clusters[i]._id})
