@@ -93,6 +93,17 @@ class rentController {
             if(user.balance<storage.price*time){
                 return response.status(404).json({ message: "Not enough money on balance. You need: "+(storage.price*time-user.balance) });
             }
+            const existingBookings = await Bookings.find({ storageId: storageId });
+            for (const booking of existingBookings) {
+                const bookingFrom = new Date(booking.rentalTime.from);
+                const bookingTo = new Date(booking.rentalTime.to);
+                const newFrom = new Date(from);
+                const newTo = new Date(to);
+
+                if ((newFrom >= bookingFrom && newFrom < bookingTo) || (newTo > bookingFrom && newTo <= bookingTo)) {
+                    return response.status(400).json({ message: "Booking conflicts with existing booking." });
+                }
+            }
             user.balance = user.balance - storage.price*time;
             await user.save();
             const newBooking = new Bookings({
