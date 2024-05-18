@@ -2,6 +2,7 @@ const Clusters = require('../models/Clusters');
 const Storages = require('../models/Storages');
 const Volumes = require("../models/Volumes");
 const {translateCluster} = require("../services/translateService");
+const Bookings = require("../models/Bookings");
 class clusterController {
     async addCluster(request, response){
         try {
@@ -54,7 +55,6 @@ class clusterController {
             const language = request.headers.lang;
             const cluster = await Clusters.find();
             const clusterResp = await Promise.all(cluster.map(cluster=> translateCluster(cluster, language)))
-            console.log(clusterResp);
             return response.status(200).json({clusters:clusterResp});
         } catch (error) {
             return response.status(500).json({ message: "Failed to get clusters.", error: error.message });
@@ -69,10 +69,26 @@ class clusterController {
             const storagesResp = [];
             for (let i = 0; i < storages.length; i++) {
                 const volumeInfo = await Volumes.find({ storageId: storages[i]._id });
+                const bookings = await Bookings.find({ storageId: storages[i]._id })
+                const now = new Date();
+                let isOpened = true;
+                let isBooked = false;
+                for (let booking of bookings) {
+                    if (booking.rentalTime.to > now) {
+                        isOpened = false;
+                        isBooked = true;
+                        break;
+                    }
+                }
+                if (isOpened && !storages[i].isOpened) {
+                    storages[i].isOpened = true;
+                    await storages[i].save();
+                }
                 storagesResp.push({
                     _id: storages[i]._id,
                     number:storages[i].number,
                     isOpened: storages[i].isOpened,
+                    isBooked: isBooked,
                     price:storages[i].price,
                     clusterId:storages[i].clusterId,
                     volumes:volumeInfo.map(volumeInfo=>{return {

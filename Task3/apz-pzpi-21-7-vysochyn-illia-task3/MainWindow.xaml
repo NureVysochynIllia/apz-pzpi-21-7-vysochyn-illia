@@ -1,0 +1,52 @@
+﻿<Window x:Class="apz_pzpi_21_7_vysochyn_illia_task3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:local="clr-namespace:apz_pzpi_21_7_vysochyn_illia_task3"
+        mc:Ignorable="d"
+        Style="{StaticResource MaterialDesignWindow}"
+        Loaded="Window_Loaded"
+        KeyUp="PayForRent_KeyUp"
+        Title="Main Window"  ResizeMode="NoResize" WindowStyle="None" Width="1920" Height="1080" WindowState="Maximized">
+    <Grid>
+        <Button FontSize="28" Visibility="Collapsed" x:Name="ButtonBack" Click="GoToMain" Width="200" Height="60"  Margin="100,100,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Button FontSize="28" x:Name="ButtonEn" Click="Button_Click_En" Content="Engilsh" Width="200" Height="60"  Margin="0,100,300,0" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+        <Button FontSize="28" x:Name="ButtonUa" Click="Button_Click_Uk" Content="Українська" Width="200" Height="60" Margin="0,100,100,0" HorizontalAlignment="Right" VerticalAlignment="Top" />
+        <StackPanel x:Name="BookStorage" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="StorageNumber"/>
+            <TextBlock x:Name="StoragePrice"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="StorageVolume"/>
+                <ComboBox FontSize="28" x:Name="VolumeUnit" SelectionChanged="VolumeUnit_SelectionChanged" />
+            </StackPanel>
+            <TextBlock x:Name="TimeFrom"/>
+            <xctk:DateTimePicker Margin="5" FontSize="28" x:Name="PickerFrom" ValueChanged="PickerFrom_ValueChanged" />
+            <TextBlock x:Name="TimeTo"/>
+            <xctk:DateTimePicker Margin="5" FontSize="28" x:Name="PickerTo" ValueChanged="PickerTo_ValueChanged" />
+            <Button Margin="10" FontSize="28" Width="200" Height="60" x:Name="ButtonRent" Click="Button_Click"/>
+        </StackPanel>
+        <StackPanel x:Name="PayForRent"  Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="PayCheck"/>
+            <TextBlock x:Name="PayWithTerminal"/>
+        </StackPanel>
+        <StackPanel x:Name="ChooseStorage" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="ClusterName"/>
+            <TextBlock x:Name="ClusterCity"/>
+            <TextBlock x:Name="ClusterType"/>
+            <TextBlock x:Name="ClusterFrom"/>
+            <TextBlock x:Name="ClusterTo"/>
+            <Grid Width="920" x:Name="StorageGrid">
+            </Grid>
+            <TextBlock TextWrapping="Wrap" x:Name="Instruction"/>
+        </StackPanel>
+    </Grid>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="32"/>
+        </Style>
+    </Window.Resources>
+</Window>

@@ -1,0 +1,36 @@
+﻿<Window x:Class="apz_pzpi_21_7_vysochyn_illia_task3.AuthWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:apz_pzpi_21_7_vysochyn_illia_task3"
+        mc:Ignorable="d"
+        Style="{StaticResource MaterialDesignWindow}"
+        Title="Login Window"  ResizeMode="NoResize" WindowStyle="None" WindowState="Maximized">
+    <Grid>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="840" Height="560" >
+            <StackPanel VerticalAlignment="Center">
+                <StackPanel Name="AuthStack" >
+                    <TextBlock FontSize="40" Text="Authorize to staff/admin account" Margin="0,0,0,20"/>
+                    <TextBlock Text="Username"/>
+                    <TextBox FontSize="28" Width="200" Name="UsernameTextBox"/>
+                    <TextBlock Text="Password"/>
+                    <PasswordBox FontSize="28" Width="200" Name="PasswordBox"/>
+                    <Button FontSize="28" Click="Login_Click" Margin="20" Width="300" Content="Confirm" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50"/>
+                   </StackPanel>
+                <StackPanel Name="ClusterIdStack"  VerticalAlignment="Center" Visibility="Collapsed">
+                    <TextBlock Text="ClusterId"/>
+                    <TextBox FontSize="28" Width="200" Name="ClusterIdBox"/>
+                    <Button FontSize="28" Click="Cluster_Click" Margin="20" Width="300" Content="Confirm" HorizontalAlignment="Center" VerticalAlignment="Center" Height="50"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="Comic Sans MS"/>
+            <Setter Property="FontSize" Value="32"/>
+        </Style>
+    </Window.Resources>
+</Window>

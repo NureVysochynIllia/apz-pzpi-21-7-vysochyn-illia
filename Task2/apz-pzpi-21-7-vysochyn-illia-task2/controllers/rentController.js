@@ -130,6 +130,7 @@ class rentController {
             }).populate('storageId')
             return response.status(201).json({bookings});
         } catch (error) {
+            console.log(error)
             return response.status(500).json({message: "Failed to find active bookings.", error: error.message});
         }
     }
@@ -142,6 +143,20 @@ class rentController {
             return response.status(201).json({bookings});
         } catch (error) {
             return response.status(500).json({message: "Failed to find bookings.", error: error.message});
+        }
+    }
+    async isStorageBooked(request, response) {
+        try{
+            const {id} = request.params;
+            const bookings = await Bookings.find({storageId: id})
+            for(const booking of bookings) {
+                if((await booking).rentalTime.to > new Date()){
+                    return response.status(201).json(true);
+                }
+            }
+            return response.status(201).json(false);
+        }catch (error) {
+            return response.status(500).json({ message: "Failed to find storage status", error: error.message });
         }
     }
     async openStorage(request, response) {
