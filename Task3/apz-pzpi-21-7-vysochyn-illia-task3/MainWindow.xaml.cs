@@ -1,4 +1,5 @@
 ﻿using apz_pzpi_21_7_vysochyn_illia_task3.Interfaces;
+using apz_pzpi_21_7_vysochyn_illia_task3.Services;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,8 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
                     JObject res = JObject.Parse(message);
                     if (res != null)
                     {
-                        if(clusterInfo.storages.Any(s=>s._id == res["storageId"].ToString())){
+                        if (clusterInfo.storages.Any(s => s._id == res["storageId"].ToString()))
+                        {
                             Application.Current.Dispatcher.Invoke(() =>
                             {
                                 Window_Loaded(null, null);
@@ -71,7 +73,7 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            JObject cluster = await Services.ClusterService.GetStorages(ClusterId, Jwt, interfaceLang);
+            JObject cluster = await ClusterService.GetStorages(ClusterId, Jwt, interfaceLang);
             if (cluster != null)
             {
                 clusterInfo = cluster.ToObject<IClusterInfo>();
@@ -107,41 +109,12 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
 
             for (int i = 0; i < storages.Count; i++)
             {
-                int row = i / cols;
-                int col = i % cols; 
-                SolidColorBrush buttonColor;
-                if (!storages[i].isOpened)
-                {
-                    buttonColor = Brushes.Red;
-                }
-                else if (storages[i].isBooked)
-                {
-                    buttonColor = Brushes.Purple;
-                }
-                else
-                {
-                    buttonColor = Brushes.Green;
-                }
-                Button button = new Button
-                {
-                    Content = storages[i].number+"  ",
-                    Margin = new Thickness(10),
-                    Background = buttonColor,
-                    Tag = storages[i],
-                    Width = 960 / cols,
-                    Height = 640 / rows,
-                    FontSize = 50,
-                    FontFamily = new FontFamily("Comic Sans MS")
-                };
-
-                button.Click += StorageButton_Click;
-                Grid.SetRow(button, row);
-                Grid.SetColumn(button, col);
+                var button = MainHelperService.FormButton(i, cols, rows, storages[i], this);
                 StorageGrid.Children.Add(button);
             }
         }
 
-        private void StorageButton_Click(object sender, RoutedEventArgs e)
+        public void StorageButton_Click(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             if (button != null && button.Background == Brushes.Green)
@@ -200,14 +173,14 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
         }
         private void InitializePaycheckLanguage()
         {
-            double hours = Math.Ceiling((selectedDateTime[1] - selectedDateTime[0]).TotalHours);
+            double hours = MainHelperService.GetTime(selectedDateTime);
             PayCheck.Text = lang.PriceForHour + hours + lang.HoursCosts + Math.Ceiling(hours * selectedStorage.price).ToString();
         }
         private async void PayForRent_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.P && PayForRent.Visibility == Visibility.Visible)
             {
-                string res = await Services.RentService.RentStorage(Jwt, selectedDateTime, selectedStorage._id);
+                string res = await RentService.RentStorage(Jwt, selectedDateTime, selectedStorage._id);
                 if (res != "Storage rented successfully.")
                 {
                     MessageBox.Show(res);
@@ -220,20 +193,7 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
             }
             if (PayForRent.Visibility == Visibility.Collapsed)
             {
-                if (e.Key >= Key.D0 && e.Key <= Key.D9) 
-                {
-                    int digit = e.Key - Key.D0;
-                    StorageInfo storage = clusterInfo.storages.FirstOrDefault(s => s.number == digit.ToString());
-                    string closeRes = await Services.RentService.CloseStorage(Jwt, storage._id);
-                    MessageBox.Show(closeRes);
-                }
-                else if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) 
-                {
-                    int digit = e.Key - Key.NumPad0;
-                    StorageInfo storage = clusterInfo.storages.FirstOrDefault(s => s.number == digit.ToString());
-                    string closeRes = await Services.RentService.CloseStorage(Jwt, storage._id);
-                    MessageBox.Show(closeRes);
-                }
+                MainHelperService.StorageControl(e, clusterInfo, Jwt);
             }
         }
         private void GoToMain(object sender, RoutedEventArgs e)
@@ -259,18 +219,7 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
                 ButtonEn.IsEnabled = false;
                 ButtonUa.IsEnabled = true;
             }
-            lang.WorkFrom = Properties.main.WorkFrom;
-            lang.WorkTo = Properties.main.WorkTo;
-            lang.NumberOfStorage = Properties.main.NumberOfStorage;
-            lang.PriceForHour = Properties.main.PriceForHour;
-            lang.VolumeOfStorage = Properties.main.VolumeOfStorage;
-            lang.PriceForRenting = Properties.main.PriceForRenting;
-            lang.HoursCosts = Properties.main.HoursCosts;
-            lang.ButtonRent = Properties.main.ButtonRent;
-            lang.RentFrom = Properties.main.RentFrom;
-            lang.RentTo = Properties.main.RentTo;
-            lang.PayWithTerminal = Properties.main.PayWithTerminal;
-            lang.Instruction = Properties.main.Instruction;
+            lang = MainHelperService.LangSetup();
             ButtonRent.Content = lang.ButtonRent;
             TimeFrom.Text = lang.RentFrom;
             TimeTo.Text = lang.RentTo;
@@ -278,10 +227,10 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
             Instruction.Text = lang.Instruction;
             ButtonBack.Content = "<-";
             Window_Loaded(null, null);
-            if(PayForRent.Visibility == Visibility.Visible)
-            InitializePaycheckLanguage();
-            if(BookStorage.Visibility == Visibility.Visible)
-            InitializeStorageLang();
+            if (PayForRent.Visibility == Visibility.Visible)
+                InitializePaycheckLanguage();
+            if (BookStorage.Visibility == Visibility.Visible)
+                InitializeStorageLang();
         }
 
         private void Button_Click_En(object sender, RoutedEventArgs e)

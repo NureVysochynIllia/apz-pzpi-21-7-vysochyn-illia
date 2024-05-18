@@ -112,6 +112,7 @@
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\ClusterService.cs" />
     <Compile Include="Services\FileStreamService.cs" />
+    <Compile Include="Services\MainHelperService.cs" />
     <Compile Include="Services\RentService.cs" />
     <Page Include="AuthWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
