@@ -5,6 +5,11 @@
       <excludeFolder url="file://$MODULE_DIR$/temp" />
       <excludeFolder url="file://$MODULE_DIR$/.tmp" />
       <excludeFolder url="file://$MODULE_DIR$/tmp" />
+      <excludeFolder url="file://$MODULE_DIR$/Task2/apz-pzpi-21-7-vysochyn-illia-task2/backups" />
+      <excludeFolder url="file://$MODULE_DIR$/Task3/apz-pzpi-21-7-vysochyn-illia-task3/.vs" />
+      <excludeFolder url="file://$MODULE_DIR$/Task3/apz-pzpi-21-7-vysochyn-illia-task3/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/Task3/apz-pzpi-21-7-vysochyn-illia-task3/obj" />
+      <excludeFolder url="file://$MODULE_DIR$/Task3/apz-pzpi-21-7-vysochyn-illia-task3/packages" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
