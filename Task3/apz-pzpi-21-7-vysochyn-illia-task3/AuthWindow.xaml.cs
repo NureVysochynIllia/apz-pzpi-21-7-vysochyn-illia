@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using apz_pzpi_21_7_vysochyn_illia_task3.Services;
+
 
 namespace apz_pzpi_21_7_vysochyn_illia_task3
 {
@@ -15,7 +17,7 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
         }
         private void CheckData()
         {
-            JObject data = Services.FileStreamService.ReadFromJsonFile<JObject>(Path);
+            JObject data = FileStreamService.ReadFromJsonFile<JObject>(Path);
             if (data != null)
             {
                 MainWindow mainWindow = new MainWindow(data["jwt"].ToString());
@@ -28,15 +30,19 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
         {
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
-            string resp = await Services.AuthService.Auth(username, password);
-            if (resp!=null)
+            string resp = await AuthService.Auth(username, password);
+            if (resp != null)
             {
-                string role = await Services.AuthService.CheckAdmin(resp);
+                string role = await AuthService.CheckAdmin(resp);
                 if (role == "admin")
                 {
                     Jwt = resp;
-                    AuthStack.Visibility = Visibility.Collapsed; 
+                    AuthStack.Visibility = Visibility.Collapsed;
                     ClusterIdStack.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password. Please try again.");
                 }
             }
             else
@@ -50,7 +56,7 @@ namespace apz_pzpi_21_7_vysochyn_illia_task3
                 {"jwt",Jwt },
                 {"clusterId",ClusterIdBox.Text}
             };
-            Services.FileStreamService.WriteToJsonFile(Path,data);
+            FileStreamService.WriteToJsonFile(Path, data);
             MainWindow mainWindow = new MainWindow(Jwt);
             mainWindow.ClusterId = ClusterIdBox.Text;
             mainWindow.Show();
