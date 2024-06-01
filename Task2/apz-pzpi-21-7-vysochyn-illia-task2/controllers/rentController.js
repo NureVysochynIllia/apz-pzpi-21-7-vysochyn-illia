@@ -139,6 +139,9 @@ class rentController {
             const user = await Users.findOne({username:request.user.username});
             const bookings = await Bookings.find({
                 userId: user._id,
+            }).populate({
+                path: 'storageId',
+                select: '-isOpened'
             })
             return response.status(201).json({bookings});
         } catch (error) {

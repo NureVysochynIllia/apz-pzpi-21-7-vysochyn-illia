@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_drawer_open">Відкрити меню навігації</string>
+    <string name="navigation_drawer_close">Закрити меню навігації</string>
+    <string name="Active_rentals">Активні оренди</string>
+    <string name="booking_history">Історія оренди</string>
+    <string name="sort_by_date">Сортувати за датою</string>
+    <string name="sort_by_price">Сортувати за ціною</string>
+    <string name="sort_by_cluster">Сортувати за кластером</string>
+    <string name="sort_by_storage">Сортувати за сховищем</string>
+    <string name="login">Логін</string>
+    <string name="password">Пароль</string>
+    <string name="username">Ім\'я користувача</string>
+    <string name="email">Електронна пошта</string>
+    <string name="balance">Баланс</string>
+    <string name="enter_amount_to_replenish">Введіть суму для поповнення</string>
+    <string name="replenish_balance">Поповнити баланс</string>
+    <string name="storage_number">Номер сховища</string>
+    <string name="cluster_name">Назва кластера</string>
+    <string name="rental_time">Час оренди</string>
+    <string name="toggle_storage">Перемикання сховища</string>
+    <string name="price">Ціна</string>
+    <string name="home">Головна</string>
+    <string name="active_rentals">Активні оренди</string>
+    <string name="account">Обліковий запис</string>
+    <string name="logout">Вийти</string>
+    <string name="search_by_city">Пошук за містом</string>
+    <string name="close_storage">Закрити сховище</string>
+    <string name="open_storage">Відкрити сховище</string>
+    <string name="rent_storage">Орендувати сховище</string>
+    <string name="end_date">Дата завершення (yyyy-MM-ddThh:mm:ss)</string>
+    <string name="start_date">Дата початку (yyyy-MM-ddThh:mm:ss)</string>
+    <string name="clusters">Кластери</string>
+    <string name="map">Найближчий кластер</string>
+    <string name="register">Register</string>
+</resources>

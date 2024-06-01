@@ -5,4 +5,21 @@
 /Task3/apz-pzpi-21-7-vysochyn-illia-task3/bin/
 /Task3/apz-pzpi-21-7-vysochyn-illia-task3/obj/
 /Task3/apz-pzpi-21-7-vysochyn-illia-task3/packages/
-/.idea/
+/Task4/apz-pzpi-21-7-vysochyn-illia-task4/node_modules
+
+/Task5/apz-pzpi-21-7-vysochyn-illia-task5/.gradle/
+/Task5/apz-pzpi-21-7-vysochyn-illia-task5/.idea/
+/Task5/apz-pzpi-21-7-vysochyn-illia-task5/app/build/
+/Task5/apz-pzpi-21-7-vysochyn-illia-task5/local.properties
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.log
+

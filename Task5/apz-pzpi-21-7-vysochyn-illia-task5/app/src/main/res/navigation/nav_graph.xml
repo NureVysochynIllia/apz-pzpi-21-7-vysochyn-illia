@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/nav_home">
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.vysochyn.rentspace.ui.home.HomeFragment"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/nav_active"
+        android:name="com.vysochyn.rentspace.ui.active_rentals.ActiveRentalsFragment"
+        tools:layout="@layout/fragment_active_rentals" />
+    <fragment
+        android:id="@+id/nav_booking"
+        android:name="com.vysochyn.rentspace.ui.booking_history.BookingHistoryFragment"
+        tools:layout="@layout/fragment_booking_history" />
+    <fragment
+        android:id="@+id/nav_account"
+        android:name="com.vysochyn.rentspace.ui.account.AccountFragment"
+        tools:layout="@layout/fragment_account" />
+</navigation>

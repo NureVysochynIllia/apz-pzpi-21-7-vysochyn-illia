@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name" translatable="false">RentSpace</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="Active_rentals">Active rentals</string>
+    <string name="booking_history">Booking History</string>
+    <string name="sort_by_date">Sort by Date</string>
+    <string name="sort_by_price">Sort by Price</string>
+    <string name="sort_by_cluster">Sort by Cluster</string>
+    <string name="sort_by_storage">Sort by Storage</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="balance">Balance</string>
+    <string name="enter_amount_to_replenish">Enter amount to replenish</string>
+    <string name="replenish_balance">Replenish Balance</string>
+    <string name="storage_number">Storage Number</string>
+    <string name="cluster_name">Cluster Name</string>
+    <string name="rental_time">Rental Time</string>
+    <string name="toggle_storage">Toggle Storage</string>
+    <string name="price">Price</string>
+    <string name="home">Home</string>
+    <string name="active_rentals">Active Rentals</string>
+    <string name="account">Account</string>
+    <string name="logout">Logout</string>
+    <string name="search_by_city">Search by city</string>
+    <string name="close_storage">Close storage</string>
+    <string name="open_storage">Open storage</string>
+    <string name="rent_storage">Rent Storage</string>
+    <string name="end_date">End Date (yyyy-MM-ddThh:mm:ss)</string>
+    <string name="start_date">Start Date (yyyy-MM-ddThh:mm:ss)</string>
+    <string name="clusters">Clusters</string>
+    <string name="map">Nearest cluster</string>
+    <string name="register">Register</string>
+    <string-array name="sort_options">
+        <item>@string/sort_by_date</item>
+        <item>@string/sort_by_price</item>
+        <item>@string/sort_by_cluster</item>
+        <item>@string/sort_by_storage</item>
+    </string-array>
+</resources>
