@@ -6,11 +6,13 @@ const WebSocket = require('ws');
 const getDistance = require("../services/gpsService");
 const Users = require("../models/Users");
 const calculateHourDifference = require("../services/dateService");
+const {translateCluster} = require("../services/translateService");
 
 class rentController {
     async getAvailableClusters(request, response){
         try{
             const { height, width, length, city, priceFrom, priceTo, type, name, from, to } = request.query;
+            const language = request.headers.lang;
             let storageQuery = {};
             if (height || width || length) {
                 const volumeQuery = {};
@@ -52,9 +54,9 @@ class rentController {
             if (city) clusterQuery.city = city;
             if (type) clusterQuery.type = type;
             if (name) clusterQuery.name = name;
-            console.log(clusterQuery)
             const availableClusters = await Clusters.find(clusterQuery);
-            return response.status(200).json({availableClusters});
+            const clusterResp = await Promise.all(availableClusters.map(cluster=> translateCluster(cluster, language)))
+            return response.status(200).json({availableClusters:clusterResp});
         } catch (error) {
             console.log(error)
             return response.status(500).json({ message: "Failed to fetch available clusters.", error: error.message });

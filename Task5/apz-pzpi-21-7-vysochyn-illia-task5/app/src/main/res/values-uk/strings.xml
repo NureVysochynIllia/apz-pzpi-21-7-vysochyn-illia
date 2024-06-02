@@ -32,5 +32,11 @@
     <string name="start_date">Дата початку (yyyy-MM-ddThh:mm:ss)</string>
     <string name="clusters">Кластери</string>
     <string name="map">Найближчий кластер</string>
-    <string name="register">Register</string>
+    <string name="register">Зареєструватися</string>
+    <string-array name="sort_options">
+        <item>@string/sort_by_date</item>
+        <item>@string/sort_by_price</item>
+        <item>@string/sort_by_cluster</item>
+        <item>@string/sort_by_storage</item>
+    </string-array>
 </resources>
