@@ -183,7 +183,7 @@ class ApiServiceRequests {
         })
     }
     fun fetchClusters(token: String, callback: (List<Cluster>?, String?) -> Unit) {
-        api.getClusters("Bearer $token").enqueue(object : Callback<ClustersResponse> {
+        api.getClusters("Bearer $token",Locale.getDefault().language.uppercase()).enqueue(object : Callback<ClustersResponse> {
             override fun onResponse(call: Call<ClustersResponse>, response: Response<ClustersResponse>) {
                 if (response.isSuccessful) {
                     callback(response.body()?.availableClusters, null)

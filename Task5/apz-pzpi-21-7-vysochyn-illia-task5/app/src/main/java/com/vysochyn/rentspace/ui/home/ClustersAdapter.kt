@@ -49,7 +49,7 @@ class ClustersAdapter(
         }
     }
 
-    fun updateData(newClusters: List<Cluster>) {
+    fun updateData(newClusters: MutableList<Cluster>) {
         clusters.clear()
         clusters.addAll(newClusters)
         notifyDataSetChanged()

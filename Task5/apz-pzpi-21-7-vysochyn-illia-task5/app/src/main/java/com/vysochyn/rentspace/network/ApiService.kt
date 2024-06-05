@@ -49,7 +49,7 @@ interface ApiService {
     fun toggleStorage(@Header("Authorization") token: String, @Body request: ToggleStorageRequest): Call<Void>
 
     @GET("rent/")
-    fun getClusters(@Header("Authorization") token: String): Call<ClustersResponse>
+    fun getClusters(@Header("Authorization") token: String,@Header("lang") lang: String): Call<ClustersResponse>
 
     @GET("rent/nearest/")
     fun getNearestCluster(@Header("Authorization") token: String, @Query("latitude") latitude: Double, @Query("longitude") longitude: Double): Call<NearestClusterResponse>

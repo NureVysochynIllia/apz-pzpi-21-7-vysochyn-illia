@@ -38,9 +38,10 @@ const ClusterPage: React.FC<{ texts: any,jwt:String }> = ({ texts ,jwt}) => {
                         Authorization: "Bearer " + jwt
                     }
                 }
-            );
-            alert(texts.bookingSuccess);
-            navigate('/active');
+            ).then(res=>{
+                alert(res.data.message);
+                navigate('/active');
+            });
         } catch (error:any) {
             console.error( error);
             alert(error.response.data.message);
@@ -149,7 +150,7 @@ const ClusterPage: React.FC<{ texts: any,jwt:String }> = ({ texts ,jwt}) => {
                             <h4 className="text-lg font-semibold">{texts.book}</h4>
                             <div className="flex flex-col space-y-2">
                                 <select
-                                    value={selectedUnit}
+                                    value={selectedStorageId}
                                     onChange={(e) => setSelectedStorageId(e.target.value)}
                                     className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >

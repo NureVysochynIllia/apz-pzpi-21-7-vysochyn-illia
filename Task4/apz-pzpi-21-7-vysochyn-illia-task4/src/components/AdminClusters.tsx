@@ -86,6 +86,9 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
             }
         }, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
+            getClusters();
         }).catch(error => {
             alert(error.response.data.message);
         });
@@ -129,6 +132,9 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
             }
         }, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
+            getClusters();
         }).catch(error => {
             alert(error.response.data.message);
         });
@@ -141,6 +147,9 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
         }
         axios.delete(`http://localhost:5000/clusters/${clusterId}/`, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
+            getClusters();
         }).catch(error => {
             alert(error.response.data.message);
         });
@@ -151,7 +160,7 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
     }, []);
 
     return (
-        <div>
+        <div style={{ overflowY: "auto" , maxHeight: "80vh" }}>
             <h2 className={"cursor-pointer text-center text-2xl my-2"} onClick={()=>{setTableOpened(!tableOpened)}}>{texts.allClusters}</h2>
             {tableOpened&&<table className="min-w-full bg-white border border-gray-300">
                 <thead>
@@ -234,6 +243,7 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.workFrom}</label>
                         <input
+                            type={"time"}
                             value={cluster.workTime.from}
                             onChange={(e) => handleWorkTimeChange('from', e.target.value)}
                             className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -242,6 +252,7 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.workTo}</label>
                         <input
+                            type={"time"}
                             value={cluster.workTime.to}
                             onChange={(e) => handleWorkTimeChange('to', e.target.value)}
                             className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -322,6 +333,7 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.workFrom}</label>
                         <input
+                            type={"time"}
                             value={cluster.workTime.from}
                             onChange={(e) => handleWorkTimeChange('from', e.target.value)}
                             className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -330,6 +342,7 @@ const AdminClusters: React.FC<{ jwt: string, texts: any }> = ({ jwt, texts }) =>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.workTo}</label>
                         <input
+                            type={"time"}
                             value={cluster.workTime.to}
                             onChange={(e) => handleWorkTimeChange('to', e.target.value)}
                             className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

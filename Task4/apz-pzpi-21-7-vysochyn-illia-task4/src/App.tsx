@@ -6,8 +6,8 @@ import Account from "./pages/auth/Account.tsx";
 import axios from "axios";
 import {useEffect, useState} from "react";
 import {UserData} from "./interfaces/UserData.ts";
-import Active from "./pages/Booking/Active.tsx";
-import History from "./pages/Booking/History.tsx";
+import Active from "./pages/booking/Active.tsx";
+import History from "./pages/booking/History.tsx";
 import Home from "./pages/Home.tsx";
 import AdminPanel from "./pages/AdminPanel.tsx";
 import AdminClusters from "./components/AdminClusters.tsx";
@@ -27,6 +27,8 @@ const App = () => {
     const getUserData = async () => {
         let jwt = localStorage["jwt"];
         if (!jwt) {
+            if(window.location.href!="http://localhost:5174/login/" && window.location.href!="http://localhost:5174/registration/")
+            window.location.replace("http://localhost:5174/login/");
             return;
         }
         setJwt(jwt);
@@ -41,7 +43,7 @@ const App = () => {
             setLanguage(savedLanguage);
         }
         getUserData();
-    },[])
+    },[]);
     return (
         <BrowserRouter>
             <div className="flex  flex-col min-h-screen bg-gray-100">

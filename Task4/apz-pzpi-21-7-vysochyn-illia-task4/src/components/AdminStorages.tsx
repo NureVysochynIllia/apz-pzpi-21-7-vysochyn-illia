@@ -8,12 +8,7 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
         isOpened: false,
         price: 0,
         clusterId: "",
-        volumes: [{
-            height: 0,
-            width: 0,
-            length: 0,
-            unit: ""
-        }]
+        volumes: []
     });
 
     const [volume, setVolume] = useState<Volume>({
@@ -55,12 +50,22 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
 
     const handleAddStorage = () => {
         const { number, price, clusterId } = storage;
-        if (!number || !price || !clusterId) {
+        if (!number || !price || !clusterId || !volume) {
             alert("All fields must be filled out");
             return;
         }
-        axios.post("http://localhost:5000/storages/", storage, {
+        axios.post("http://localhost:5000/storages/", {
+            number:storage.number,
+            price:storage.price,
+            clusterId:storage.clusterId,
+            height:volume.height,
+            width:volume.width,
+            length:volume.length,
+            unit:volume.unit
+        }, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
         }).then(getStorages).catch(error => {
             alert(error.response.data.message);
         });
@@ -73,6 +78,8 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
         }
         axios.patch(`http://localhost:5000/storages/${storageId}/`, storage, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
         }).then(getStorages).catch(error => {
             alert(error.response.data.message);
         });
@@ -85,6 +92,8 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
         }
         axios.delete(`http://localhost:5000/storages/${storageId}/`, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
         }).then(getStorages).catch(error => {
             alert(error.response.data.message);
         });
@@ -97,6 +106,8 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
         }
         axios.post("http://localhost:5000/storages/volume/", { storageId, ...volume }, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
         }).then(getStorages).catch(error => {
             alert(error.response.data.message);
         });
@@ -109,6 +120,8 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
         }
         axios.patch("http://localhost:5000/storages/volume/", { storageId, ...volume }, {
             headers: { Authorization: "Bearer " + jwt }
+        }).then(resp=>{
+            alert(resp.data.message)
         }).then(getStorages).catch(error => {
             alert(error.response.data.message);
         });
@@ -132,7 +145,7 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
     }, []);
 
     return (
-        <div>
+        <div style={{ overflowY: "auto" , maxHeight: "80vh" }}>
             <h2 className={"cursor-pointer text-center text-2xl my-2"} onClick={()=>{setTableOpened(!tableOpened)}}>{texts.allStorages}</h2>{tableOpened&&
             <table className="min-w-full bg-white border border-gray-200">
                 <thead>
@@ -168,7 +181,7 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                 <button onClick={() => setFormType("edit")}
                         className="bg-gray-200 py-2 px-4 border rounded">{texts.editStorage}</button>
                 <button onClick={() => setFormType("delete")}
-                        className="bg-gray-200 py-2 px-4 border rounded">{texts.deleteCluster}</button>
+                        className="bg-gray-200 py-2 px-4 border rounded">{texts.deleteStorage}</button>
                 <button onClick={() => setFormType("addVol")}
                         className="bg-gray-200 py-2 px-4 border rounded">{texts.addVolume}</button>
                 <button onClick={() => setFormType("editVol")}
@@ -184,12 +197,14 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.number}</label>
                         <input value={storage.number}
+                               type={'number'}
                                onChange={(e) => setStorage(s => ({...s, number: e.target.value}))}
                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                     </div>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.price}</label>
                         <input value={storage.price}
+                               type={'number'}
                                onChange={(e) => setStorage(s => ({...s, price: parseFloat(e.target.value)}))}
                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                     </div>
@@ -204,6 +219,34 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                                     {cluster.name}
                                 </option>
                             ))}
+                        </select>
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-gray-700 font-medium">{texts.height}</label>
+                        <input value={volume.height}
+                               onChange={(e) => setVolume(v => ({...v, height: parseFloat(e.target.value)}))}
+                               className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-gray-700 font-medium">{texts.width}</label>
+                        <input value={volume.width}
+                               onChange={(e) => setVolume(v => ({...v, width: parseFloat(e.target.value)}))}
+                               className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-gray-700 font-medium">{texts.length}</label>
+                        <input value={volume.length}
+                               onChange={(e) => setVolume(v => ({...v, length: parseFloat(e.target.value)}))}
+                               className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                    </div>
+                    <div className="flex flex-col">
+                        <label className="text-gray-700 font-medium">{texts.unit}</label>
+                        <select value={volume.unit} onChange={(e) => setVolume(v => ({...v, unit: e.target.value}))}
+                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="m">{texts.meters}</option>
+                            <option value="ft">{texts.feet}</option>
+                            <option value="yd">{texts.yard}</option>
+                            <option value="in">{texts.inch}</option>
                         </select>
                     </div>
                     <button type="submit"
@@ -223,7 +266,7 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                             <option value="" disabled>{texts.selectStorage}</option>
                             {storages.map((storage) => (
                                 <option key={storage._id} value={storage._id}>
-                                    {storage.number}
+                                    {clusters.find(cluster => cluster._id === storage.clusterId)?.name+" №"+storage.number}
                                 </option>
                             ))}
                         </select>
@@ -231,12 +274,14 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.number}</label>
                         <input value={storage.number}
+                               type={'number'}
                                onChange={(e) => setStorage(s => ({...s, number: e.target.value}))}
                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                     </div>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.price}</label>
                         <input value={storage.price}
+                               type={'number'}
                                onChange={(e) => setStorage(s => ({...s, price: parseFloat(e.target.value)}))}
                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
                     </div>
@@ -270,7 +315,7 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                             <option value="" disabled>{texts.selectStorage}</option>
                             {storages.map((storage) => (
                                 <option key={storage._id} value={storage._id}>
-                                    {storage.number}
+                                    {clusters.find(cluster => cluster._id === storage.clusterId)?.name+" №"+storage.number}
                                 </option>
                             ))}
                         </select>
@@ -287,22 +332,15 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                 }} className="mt-4 p-4 bg-white shadow-md rounded-lg space-y-4">
                     <h3>{texts.addVolume}</h3>
                     <div className="flex flex-col">
-                        <label className="text-gray-700 font-medium">{texts.height}</label>
-                        <input value={volume.height}
-                               onChange={(e) => setVolume(v => ({...v, height: parseFloat(e.target.value)}))}
-                               className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="text-gray-700 font-medium">{texts.width}</label>
-                        <input value={volume.width}
-                               onChange={(e) => setVolume(v => ({...v, width: parseFloat(e.target.value)}))}
-                               className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-                    </div>
-                    <div className="flex flex-col">
-                        <label className="text-gray-700 font-medium">{texts.length}</label>
-                        <input value={volume.length}
-                               onChange={(e) => setVolume(v => ({...v, length: parseFloat(e.target.value)}))}
-                               className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+                        <select value={storageId} onChange={(e) => handleSelectStorage(e.target.value)}
+                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled>{texts.selectStorage}</option>
+                            {storages.map((storage) => (
+                                <option key={storage._id} value={storage._id}>
+                                    {clusters.find(cluster => cluster._id === storage.clusterId)?.name + " №" + storage.number}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.unit}</label>
@@ -325,6 +363,17 @@ const AdminStorages: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) =>
                     handleEditVolume()
                 }} className="mt-4 p-4 bg-white shadow-md rounded-lg space-y-4">
                     <h3>{texts.editVolume}</h3>
+                    <div className="flex flex-col">
+                        <select value={storageId} onChange={(e) => handleSelectStorage(e.target.value)}
+                                className="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="" disabled>{texts.selectStorage}</option>
+                            {storages.map((storage) => (
+                                <option key={storage._id} value={storage._id}>
+                                    {clusters.find(cluster => cluster._id === storage.clusterId)?.name + " №" + storage.number}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                     <div className="flex flex-col">
                         <label className="text-gray-700 font-medium">{texts.height}</label>
                         <input value={volume.height}

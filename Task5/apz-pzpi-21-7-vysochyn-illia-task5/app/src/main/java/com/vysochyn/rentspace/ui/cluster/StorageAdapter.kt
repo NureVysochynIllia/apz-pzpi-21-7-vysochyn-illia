@@ -1,5 +1,6 @@
 package com.vysochyn.rentspace.ui.cluster
 
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,8 +45,8 @@ class StorageAdapter(
         private val storageIsOpened: TextView = itemView.findViewById(R.id.tvStorageIsOpened)
 
         fun bind(storage: Storage, isSelected: Boolean) {
-            storageNumber.text = storage.number.toString()
-            storagePrice.text = storage.price.toString()
+            storageNumber.text = "Number: "+ storage.number.toString()
+            storagePrice.text = "Price: " + storage.price.toString()
             storageIsOpened.text = if (storage.isOpened) "Opened" else "Closed"
             val spinner = itemView.findViewById<Spinner>(R.id.spinnerVolumes)
             val volumes = storage.volumes.map { "${it.height}x${it.width}x${it.length} ${it.unit}" }

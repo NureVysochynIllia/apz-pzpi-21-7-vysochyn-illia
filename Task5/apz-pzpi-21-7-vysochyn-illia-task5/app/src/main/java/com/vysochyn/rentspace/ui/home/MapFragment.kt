@@ -116,7 +116,7 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
             val routes = jsonResponse.getJSONArray("routes")
             val points = ArrayList<LatLng>()
             val polylineOptions = PolylineOptions()
-
+            var distance = 0
             for (i in 0 until routes.length()) {
                 val legs = routes.getJSONObject(i).getJSONArray("legs")
                 for (j in 0 until legs.length()) {
@@ -124,15 +124,18 @@ class MapFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListe
                     for (k in 0 until steps.length()) {
                         val polyline = steps.getJSONObject(k).getJSONObject("polyline").getString("points")
                         points.addAll(PolyUtil.decode(polyline))
+                        distance = distance+steps.getJSONObject(k).getJSONObject("distance").getInt("value");
                     }
                 }
             }
-
+            val tvClusterName: TextView? = view?.findViewById(R.id.tvClusterName)
+            tvClusterName?.text = (tvClusterName?.text.toString() + " distance:"+distance/1000+"km")
             polylineOptions.addAll(points)
             polylineOptions.width(10f)
             polylineOptions.color(Color.BLUE)
             polylineOptions.geodesic(true)
             mMap.addPolyline(polylineOptions)
+
         }, Response.ErrorListener {
                 error -> error.printStackTrace()
         }) {}

@@ -104,7 +104,8 @@ const localization = {
         enterAmount: "Enter amount",
         replenish: "Replenish",
         cancel: "Cancel",
-        book:"Reserve"
+        book:"Reserve",
+        exportSuccess:"Export Success"
     },
     UK: {
         locale: 'UK',
@@ -186,7 +187,7 @@ const localization = {
         createAccount: "Створити акаунт",
         password: "Пароль",
         repeatPassword: "Повторіть пароль",
-        submit: "Відправити",
+        submit: "Підтвердити",
         alreadyHaveAccount: "Вже маєте акаунт?",
         login: "Увійти",
         noAccount: "Не маєте акаунта?",
@@ -211,7 +212,8 @@ const localization = {
         enterAmount: "Введіть суму",
         replenish: "Поповнити",
         cancel: "Скасувати",
-        book:"Забронювати"
+        book:"Забронювати",
+        exportSuccess:"Експорт успішний"
     }
 };
 

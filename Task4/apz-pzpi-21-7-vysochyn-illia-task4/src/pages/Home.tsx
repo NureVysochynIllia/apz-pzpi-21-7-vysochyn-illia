@@ -13,7 +13,7 @@ const Home: React.FC<{ texts: any,jwt:String }> = ({ texts ,jwt}) => {
                 const res = await axios.get('http://localhost:5000/rent/', {
                     headers: {
                         Authorization: "Bearer " + jwt,
-                        lang: "EN"
+                        lang: texts.locale
                     }
                 });
                 setClusters(res.data.availableClusters);

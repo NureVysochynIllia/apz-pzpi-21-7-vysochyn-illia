@@ -96,7 +96,12 @@ class ClustersListFragment : Fragment() {
     }
 
     private fun filterClusters(city: String) {
-        val filtered = clusters.filter { it.city.contains(city, true) }
+        if(city=="")
+        {
+            adapter.updateData(clusters)
+            return
+        }
+        val filtered = clusters.filter { it.city.contains(city, true) }.toMutableList()
         adapter.updateData(filtered)
     }
 }

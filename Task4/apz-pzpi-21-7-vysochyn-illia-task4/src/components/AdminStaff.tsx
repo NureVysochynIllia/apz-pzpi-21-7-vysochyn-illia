@@ -27,7 +27,6 @@ const AdminStaff: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) => {
             alert(texts.providePriceAlert);
             return;
         }
-
         try {
             await axios.post("http://localhost:5000/staff/price/", {
                 price: price,
@@ -37,7 +36,7 @@ const AdminStaff: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) => {
                 headers: { Authorization: "Bearer " + jwt }
             });
             alert(texts.priceUpdated);
-            getClusters();
+            await getClusters();
         } catch (error:any) {
             console.error("Failed to change price:", error);
             alert(error.response.data.message);
@@ -49,7 +48,7 @@ const AdminStaff: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) => {
     }, []);
 
     return (
-        <div className="p-4">
+        <div style={{ overflowY: "auto" , maxHeight: "80vh" }}>
             <h2 className="text-2xl font-bold mb-4">{texts.changeStoragePrice}</h2>
             <button
                 onClick={() => setShowForm(!showForm)}
@@ -94,7 +93,7 @@ const AdminStaff: React.FC<{ jwt: string; texts: any }> = ({ jwt, texts }) => {
                                 clusters
                                     .find((cluster) => cluster._id === selectedClusterId)
                                     ?.storages?.map((storage) => (
-                                    <option key={storage._id} value={storage._id}>
+                                    <option key={storage.number} value={storage.number}>
                                         {texts.storage} {storage.number}
                                     </option>
                                 ))}

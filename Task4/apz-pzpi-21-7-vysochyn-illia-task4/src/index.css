@@ -60,7 +60,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: var(--button-background-dark);
+  background-color: var(--button-background-light);
   cursor: pointer;
   transition: border-color 0.25s;
 }

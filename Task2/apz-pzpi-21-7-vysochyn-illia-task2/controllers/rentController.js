@@ -103,7 +103,7 @@ class rentController {
                 const newTo = new Date(to);
 
                 if ((newFrom >= bookingFrom && newFrom < bookingTo) || (newTo > bookingFrom && newTo <= bookingTo)) {
-                    return response.status(400).json({ message: "Booking conflicts with existing booking." });
+                    return response.status(400).json({ message: "booking conflicts with existing booking." });
                 }
             }
             user.balance = user.balance - storage.price*time;
@@ -168,16 +168,16 @@ class rentController {
         try {
             const { bookingId } = request.body;
             if (!bookingId) {
-                return response.status(400).json({ message: "Error: Booking ID is required." });
+                return response.status(400).json({ message: "Error: booking ID is required." });
             }
             const user = await Users.findOne({username:request.user.username});
             const booking = await Bookings.findById(bookingId)
             if (!booking || !booking.userId.equals(user._id)) {
-                return response.status(404).json({ message: "Booking not found." });
+                return response.status(404).json({ message: "booking not found." });
             }
             const now = new Date();
             if (now < new Date(booking.rentalTime.from) || now > new Date(booking.rentalTime.to)) {
-                return response.status(400).json({ message: "Booking has not started yet or has already ended." });
+                return response.status(400).json({ message: "booking has not started yet or has already ended." });
             }
             const storage = await Storages.findById(booking.storageId);
             if (!storage) {

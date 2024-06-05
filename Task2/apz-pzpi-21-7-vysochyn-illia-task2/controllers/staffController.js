@@ -15,7 +15,7 @@ class staffController {
             if (!storageId) {
                 await Storages.updateMany({clusterId}, {price});
             } else {
-                await Storages.findByIdAndUpdate(storageId, {price});
+                await Storages.updateOne({number: storageId, clusterId: clusterId},{price});
             }
             return response.status(201).json({message: 'Price changed successfully.'});
         } catch (error) {
